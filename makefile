@@ -1,3 +1,5 @@
+all : $(patsubst src/%.cpp,bin/%,$(wildcard src/*.cpp))
+
 FORCE :
 
 .makefile.helper : scripts/makefile_helper.sh working src media
@@ -17,6 +19,9 @@ HEADER_DEPS = $(wildcard inc/*.hpp)
 bin/% : src/%.cpp $(HEADER_DEPS)
 	-mkdir -p bin
 	$(CXX) $(CPPFLAGS) $(filter-out %.hpp,$^) -o $@ $(LDFLAGS) $(LDLIBS)
+
+working :
+	mkdir working
 
 working/%.mjpeg : media/%.mp4
 	mkdir -p working

@@ -99,7 +99,7 @@ fi
 if [[ $VIS == 1 ]] ; then
     ffmpeg -y -i ${WORKING}/objects-true.mjpeg               -i ${WORKING}/objects-ref-detected.mjpeg \
               -i ${WORKING}/objects-spiking-detected.mjpeg   -i ${WORKING}/objects-trad-detected.mjpeg \
-           -filter_complex "[0:v][1:v][2:v][3:v]xstack=inputs=4:layout=0_0|w0_0|0_h0|w0_h0[v]" -map "[v]" \
+           -filter_complex "[0:v][1:v]hstack=inputs=2[top];[2:v][3:v]hstack=inputs=2[bottom];[top][bottom]vstack=inputs=2[v]" -map "[v]" \
            ${WORKING}/objects-detected-all.mp4
 fi
 
