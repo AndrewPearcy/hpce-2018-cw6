@@ -175,7 +175,7 @@ you may wish to look at them).
 The script supports two optional parameters which you may find useful:
 ```
 scripts/standard_flow.sh input-video [object-stream|"random"] [frames|"all"] [oversample] [visualise]
-``
+```
 - `event-stream` : Allows you to specify the input object stream, otherwise a new random stream is generated.
 - `frames` : Species that only the first "frames" frames in the video should be converted (to speed things up)
 - `oversample` : Used to modify the spiking to traditional framerate. By default this is 100.
