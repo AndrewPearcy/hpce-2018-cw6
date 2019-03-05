@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include <cstdint>
+#include <math.h>
 
 #include "object_event.hpp"
 #include "pattern.hpp"
