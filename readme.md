@@ -64,11 +64,11 @@ Spiking Video Streams
 ---------------------
 
 A traditional frame-based camera produces complete frames at some
-fixed time period ![delta_f](https://latex.codecogs.com/svg.latex?delta_f), so it produces a sequence of frames:
+fixed time period ![delta_f](https://latex.codecogs.com/svg.latex?\Delta_f), so it produces a sequence of frames:
 
 ![f_0, f_1, f_2, ...](https://latex.codecogs.com/svg.latex?f_0,f_1,f_2,\\&space;\hdots)
 
-where frame ![f_i](https://latex.codecogs.com/svg.latex?f_i) is associated with the relative time point ![i \times delta_f](https://latex.codecogs.com/svg.latex?i\times{delta_f}),
+where frame ![f_i](https://latex.codecogs.com/svg.latex?f_i) is associated with the relative time point ![i \times delta_f](https://latex.codecogs.com/svg.latex?i\times{\Delta_f}),
 and each frame is a ![w \times h \times c](https://latex.codecogs.com/svg.latex?w\times{h}\times{c}) tensor (well, technically a holor).
 Typically ![c=1](https://latex.codecogs.com/svg.latex?c=1) for gray-scale or ![c=3](https://latex.codecogs.com/svg.latex?c=3) for RGB or YUV.
 
@@ -96,12 +96,12 @@ The relative advantages of frame-based and event-based camers comes down
 to a tradeoff between:
 
 - latency: the frame-based camera has a fixed temporal resolution of
-  ![delta_f](https://latex.codecogs.com/svg.latex?delta_f),
+  ![delta_f](https://latex.codecogs.com/svg.latex?\Delta_f),
   while the temporal resolution of the event-based camera depends on how quickly
   pixels are changing, and how many pixels are changing.
 
 - bandwidth: the frame-based camera requires fixed band-width of
-  ![O( w \times h \times c / delta_f)](https://latex.codecogs.com/svg.latex?O(w\times{h}\times{c}/{delta_f}))
+  ![O( w \times h \times c / delta_f)](https://latex.codecogs.com/svg.latex?O(w\times{h}\times{c}/{\Delta_f}))
   while the event-based camera bandwidth varies with over time; between time points
   ![t_a](https://latex.codecogs.com/svg.latex?t_a) and
   ![t_b](https://latex.codecogs.com/svg.latex?t_b) the bandwidth will be proportional to
