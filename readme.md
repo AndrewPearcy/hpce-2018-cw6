@@ -19,7 +19,7 @@ with large frame sizes (up to HD). Their choice of solution then looks like:
   is processed progressively as the spikes are received, reducing
   the latency to less than 1ms. They know how to build custom hardware
   object detection which is able to perform object detection in a
-  massively parallel well, but are limited in how many spikes per
+  massively parallel way, but are limited in how many spikes per
   second it can consume.
 
 The unknown factor is whether the degradation in image quality due to
@@ -33,6 +33,7 @@ engineers and the object detection hardware engineers to mimic the
 qualitative behaviour of the system - essentially:
 - does the system still manage to detect objects; and
 - how long does it take to detect them.
+
 It turns out the system is quite slow (as they were hardware specialists),
 so getting the results for many scenarios is becoming a bottleneck.
 Bringing those two groups together was expensive, and it's not clear they
@@ -149,20 +150,20 @@ is a key goal of this whole application.
 
 
 Process:
-1 - Import the base/background video stream
-2 - Generate a ground truth set of object positions over time
-3 - Combine the base video stream and ground truth objects positions into a new
+1. Import the base/background video stream
+2. Generate a ground truth set of object positions over time
+3. Combine the base video stream and ground truth objects positions into a new
     combined video stream, which reflects the "real" view to the camera.
-4 - Run the classifier on the full version, without modelling the spiking or
+4. Run the classifier on the full version, without modelling the spiking or
     traditional camera.
-4 - Model the spiking camera detecting objects
-    A - Convert the combined video stream to a spiking equivalent with a chosen camera model
-    B - Reconstruct the video stream implied by the spikes
+5. Model the spiking camera detecting objects \
+    A - Convert the combined video stream to a spiking equivalent with a chosen camera model \
+    B - Reconstruct the video stream implied by the spikes \
     C - Run the object detection filter
-5 - Model the traditional frame based approach
+6. Model the traditional frame based approach \
     A - Downsample the high-speed video to simulate the slower frame rate (compared to the
-        event stream).
-    B - Run the object detection filter on the slower video
+        event stream) \
+    B - Run the object detection filter on the slower video \
     C - Resample the event stream to map it back to the original high frame rate.
 
 
