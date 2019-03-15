@@ -19,7 +19,7 @@ with large frame sizes (up to HD). Their choice of solution then looks like:
   is processed progressively as the spikes are received, reducing
   the latency to less than 1ms. They know how to build custom hardware
   object detection which is able to perform object detection in a
-  massively parallel well, but are limited in how many spikes per
+  massively parallel way, but are limited in how many spikes per
   second it can consume.
 
 The unknown factor is whether the degradation in image quality due to
@@ -33,6 +33,7 @@ engineers and the object detection hardware engineers to mimic the
 qualitative behaviour of the system - essentially:
 - does the system still manage to detect objects; and
 - how long does it take to detect them.
+
 It turns out the system is quite slow (as they were hardware specialists),
 so getting the results for many scenarios is becoming a bottleneck.
 Bringing those two groups together was expensive, and it's not clear they
@@ -64,27 +65,28 @@ Spiking Video Streams
 ---------------------
 
 A traditional frame-based camera produces complete frames at some
-fixed time period $delta_f$, so it produces a sequence of frames:
-```
-f_0, f_1, f_2, ...
-```
-where frame $f_i$ is associated with the relative time point $i*delta_f$,
-and each frame is a $w \times h \times c$ tensor (well, technically a holor).
-Typically $c=1$ for gray-scale or $c=3$ for RGB or YUV.
+fixed time period ![\delta_f](https://latex.codecogs.com/svg.latex?\delta_f), so it produces a sequence of frames:
+
+![f_0, f_1, f_2, ...](https://latex.codecogs.com/svg.latex?f_0,f_1,f_2,\\&space;\hdots)
+
+where frame ![f_i](https://latex.codecogs.com/svg.latex?f_i) is associated with the relative time point ![i \times \delta_f](https://latex.codecogs.com/svg.latex?i\times{\delta_f}),
+and each frame is a ![w \times h \times c](https://latex.codecogs.com/svg.latex?w\times{h}\times{c}) tensor (well, technically a holor).
+Typically ![c=1](https://latex.codecogs.com/svg.latex?c=1) for gray-scale or ![c=3](https://latex.codecogs.com/svg.latex?c=3) for RGB or YUV.
 
 The event based cameras being considered produce a stream of pixel events,
 which describe changes to pixel intensity at specific points in time. These
 events occur at a sequence of (non-strict) monotonically increasing
 time points, and each event carries an update to exactly one pixel. So we
 have a sequence of events:
-```
-e_0, e_1, e_2, ...
-```
-with each event a tuple $e_i=(t,x,y,v)$ where:
-- $t$ is when the event occurred
-- $(x,y)$ is the pixel co-ordinate being updated, with $0 \leq x < w$ and $0 \leq y < h$.
-- v is a $c$ component vector, e.g. for RGB is a 3-dimensional vector.
-Time monotonicity means that we should always have $i < j \implies t_i \leq t_j$.
+
+![e_0, e_1, e_2, ...](https://latex.codecogs.com/svg.latex?e_0,e_1,e_2,\\&space;\hdots)
+
+with each event a tuple ![e_i=(t,x,y,v)](https://latex.codecogs.com/svg.latex?e_i=(t,x,y,v)) where:
+- ![t](https://latex.codecogs.com/svg.latex?t) is when the event occurred
+- ![(x,y)](https://latex.codecogs.com/svg.latex?(x,y)) is the pixel co-ordinate being updated, with ![0 \leq x < w](https://latex.codecogs.com/svg.latex?0\leq{x}<w) and ![0 \leq y < h](https://latex.codecogs.com/svg.latex?0\leq{y}<h).
+- ![v](https://latex.codecogs.com/svg.latex?v) is a ![c](https://latex.codecogs.com/svg.latex?c) component vector, e.g. for RGB is a 3-dimensional vector.
+Time monotonicity means that we should always have
+![i < j \implies t_i \leq t_j](https://latex.codecogs.com/svg.latex?i<j\implies{t_i}\leq{t_j}).
 
 From the spike sequence we can convert back to complete frames at
 each discrete event time, though it would produce an extremely
@@ -94,14 +96,19 @@ high frame-rate stream with relatively low information content
 The relative advantages of frame-based and event-based camers comes down
 to a tradeoff between:
 
-- latency: the frame-based camera has a fixed temporal resolution of $delta_f$,
+- latency: the frame-based camera has a fixed temporal resolution of
+  ![\delta_f](https://latex.codecogs.com/svg.latex?\delta_f),
   while the temporal resolution of the event-based camera depends on how quickly
   pixels are changing, and how many pixels are changing.
 
-- bandwidth: the frame-based camera requires fixed band-width of $O( w \times h \times c / delta_f )$
+- bandwidth: the frame-based camera requires fixed band-width of
+  ![O( w \times h \times c / \delta_f)](https://latex.codecogs.com/svg.latex?O(w\times{h}\times{c}/{\delta_f}))
   while the event-based camera bandwidth varies with over time; between time points
-  $t_a$ and $t_b$ the bandwidth will be proportional to $| { e_i : t_a < t_i < t_b } | / (t_b-t_a)$,
-  i.e. the number of events between $t_a$ and $t_b$ divided by the time period.
+  ![t_a](https://latex.codecogs.com/svg.latex?t_a) and
+  ![t_b](https://latex.codecogs.com/svg.latex?t_b) the bandwidth will be proportional to
+  ![| { e_i : t_a < t_i < t_b } | / (t_b-t_a)](https://latex.codecogs.com/svg.latex?|e_i:t_a<t_i<t_b|\\&space;/\\&space;(t_b-t_a)),
+  i.e. the number of events between ![t_a](https://latex.codecogs.com/svg.latex?t_a)
+  and ![t_b](https://latex.codecogs.com/svg.latex?t_b) divided by the time period.
   Ultimately there will be some physical limit on bandwidth, and because each pixel
   event has higher overhead than a normal pixel (as it carries time and location, as well
   as value), the maximum events per second will be lower than the pixel rate of a frame camera.
@@ -149,20 +156,20 @@ is a key goal of this whole application.
 
 
 Process:
-1 - Import the base/background video stream
-2 - Generate a ground truth set of object positions over time
-3 - Combine the base video stream and ground truth objects positions into a new
+1. Import the base/background video stream
+2. Generate a ground truth set of object positions over time
+3. Combine the base video stream and ground truth objects positions into a new
     combined video stream, which reflects the "real" view to the camera.
-4 - Run the classifier on the full version, without modelling the spiking or
+4. Run the classifier on the full version, without modelling the spiking or
     traditional camera.
-4 - Model the spiking camera detecting objects
-    A - Convert the combined video stream to a spiking equivalent with a chosen camera model
-    B - Reconstruct the video stream implied by the spikes
+5. Model the spiking camera detecting objects \
+    A - Convert the combined video stream to a spiking equivalent with a chosen camera model \
+    B - Reconstruct the video stream implied by the spikes \
     C - Run the object detection filter
-5 - Model the traditional frame based approach
+6. Model the traditional frame based approach \
     A - Downsample the high-speed video to simulate the slower frame rate (compared to the
-        event stream).
-    B - Run the object detection filter on the slower video
+        event stream) \
+    B - Run the object detection filter on the slower video \
     C - Resample the event stream to map it back to the original high frame rate.
 
 
