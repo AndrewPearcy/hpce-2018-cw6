@@ -7,12 +7,12 @@ FORCE :
 
 include .makefile.helper	
 
-CPPFLAGS += -W -Wall
+CPPFLAGS += -W -O3 -Wall -pg
 CPPFLAGS += -Iinc -std=c++14 -g
 
-CPPFLAGS += -O3 -DNDEBUG=1
+CPPFLAGS += -DNDEBUG=1
 
-LDLIBS += -ljpeg
+LDLIBS += -ljpeg -ltbb
 
 HEADER_DEPS = $(wildcard inc/*.hpp)
 

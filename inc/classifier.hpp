@@ -8,6 +8,8 @@
 
 #include "object_event.hpp"
 #include "pattern.hpp"
+#include "tbb/tbb.h"
+#include "tbb/concurrent_vector.h"
 
 std::vector<float> make_field(const Frame &f)
 {
@@ -90,8 +92,11 @@ void pattern_search_in_level(
     // Output events array
     std::vector<object_event> &events
 ){
-    for(int oy=0; oy<=fh-ph; oy++){
-        for(int ox=0; ox<=fw-pw; ox++){
+    tbb::concurrent_vector<object_event> concurr_events;
+    unsigned oySize = fh-ph;
+    tbb::parallel_for(0u , oySize, [&](unsigned oy){
+   // for(int oy = 0; oy<=fh-ph; oy++){    
+	for(int ox=0; ox<=fw-pw; ox++){
             float score=pattern_strength_at_point(
                 fw, fh,
                 field,
@@ -110,10 +115,12 @@ void pattern_search_in_level(
                 event.y=oy*scale;
                 event.scale=scale;
                 event.strength=score;
-                events.push_back(event);
+                concurr_events.push_back(event);
             }
         }
-    }
+    //}
+    });
+    events = std::vector<object_event>(concurr_events.begin(), concurr_events.end());
 
     /*
     Disable. Here for next gen hardware, but not relevant yet.
