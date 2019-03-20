@@ -217,7 +217,11 @@ The document will be read by _engineers_, which means that they will understand
 technical prose, and will appreciate the use of abstraction and modelling. They
 also appreciate conciseness, and the structuring of information.
 
-This document should be committed as a single pdf with the path `report/report.pdf`.
+This document should be committed as a single A4 or US letter-sized pdf with the path `report/report.pdf`.
+
+While leniency will be exercised with respect to judgement of presentation, groups who produce unreasonably formatted reports may be asked, within a very short timescale, to resumbit.
+Examples of unreasonable formatting include tiny font sizes, tight line spacing and very narrow margins.
+A good example of a perfectly acceptable template is [the IEEETran conference format](https://www.overleaf.com/latex/templates/ieee-bare-demo-template-for-conferences/ypypvwjmvtdf).
 
 Empirical Analysis (30%)
 ------------------------
@@ -229,7 +233,6 @@ improve performance. Any modifications and improvements performed at
 this stage should be included in a script called `scripts/optimised_flow.sh`.
 
 Your analysis should:
-- contain at most 1 page worth of text;
 - include at least two graphs, tables, or figures which provide data or
   evidence to support the analysis;
 - explicitly refer to scripts or programs in your codebase which allowed
@@ -257,7 +260,6 @@ A 2 page analysis of the theoretical/asymptotic properties of the application
 from the point of view of potential parallelism and optimisation.
 
 Your analysis should:
-- contain at most 1 page worth of text;
 - include at least 1 diagram or figure to explain the application;
 - make explicit reference to classes and/or functions in the original code;
 - define a key performance metric that you think is important and informative.
@@ -283,7 +285,6 @@ pitching for the resources to do the work, so your proposal should
 include some sense of the risk-reward involved.
 
 Your proposal should:
-- contain at most 1 page worth of text;
 - include at least one figure, graph, table, or algorithm which supports the proposed solution;
 - rely on at least one computational experiment which provides evidence for your new strategy.
 - reference at least one piece of enhanced or optimised code in your codebase to provide
